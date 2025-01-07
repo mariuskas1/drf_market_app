@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status 
-from .serializers import MarketSerializer, SellerDetailSerializer, SellerCreateSerializer
+from .serializers import MarketSerializer, SellerDetailSerializer, SellerCreateSerializer, SellerSerializer
 from market_app.models import Market, Seller
 
 @api_view(['GET', 'POST'])
