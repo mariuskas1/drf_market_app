@@ -2,7 +2,8 @@ from rest_framework import serializers
 from market_app.models import Market, Seller
 
 
-class MarketSerializer(serializers.ModelSerializer):
+class MarketSerializer(serializers.ModelSerializer):    
+
     class Meta:
         model = Market
         fields = '__all__'
@@ -17,8 +18,14 @@ class SellerSerializer(serializers.ModelSerializer):
         source='markets'
     )
 
+    market_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Seller
+        exclude = []
+
+    def get_market_count(self, obj):
+        return obj.markets.count()
         
 
 
