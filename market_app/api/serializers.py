@@ -2,7 +2,9 @@ from rest_framework import serializers
 from market_app.models import Market, Seller
 
 
-class MarketSerializer(serializers.ModelSerializer):    
+class MarketSerializer(serializers.HyperlinkedModelSerializer):    
+
+    sellers = serializers.StringRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Market

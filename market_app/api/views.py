@@ -3,13 +3,32 @@ from rest_framework.response import Response
 from rest_framework import status 
 from .serializers import MarketSerializer, SellerSerializer
 from market_app.models import Market, Seller
+from rest_framework.views import APIView
+
+
+
+class MarketsView(APIView):
+    
+    def get(self, request):
+        markets = Market.objects.all()
+        serializer = MarketSerializer(markets, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = MarketSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 @api_view(['GET', 'POST'])
 def markets_view(request):
 
     if request.method == 'GET':
         markets = Market.objects.all()
-        serializer = MarketSerializer(markets, many=True)
+        serializer = MarketSerializer(markets, many=True, context={'request': request})
         return Response(serializer.data)
     
 
@@ -17,9 +36,9 @@ def markets_view(request):
         serializer = MarketSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else: 
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
