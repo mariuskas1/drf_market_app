@@ -4,22 +4,25 @@ from rest_framework import status
 from .serializers import MarketSerializer, SellerSerializer
 from market_app.models import Market, Seller
 from rest_framework.views import APIView
+from rest_framework import mixins
+from rest_framework import generics
 
 
 
-class MarketsView(APIView):
+class MarketsView(mixins.ListModelMixin,
+                  mixins.CreateModelMixin,
+                  generics.GenericAPIView):
     
-    def get(self, request):
-        markets = Market.objects.all()
-        serializer = MarketSerializer(markets, many=True, context={'request': request})
-        return Response(serializer.data)
+    queryset = Market.objects.all()
+    serializer_class = MarketSerializer
 
-    def post(self, request):
-        serializer = MarketSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
 
 
 
