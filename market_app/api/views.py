@@ -38,31 +38,22 @@ class SellersView(mixins.ListModelMixin,
 
 
 
+class MarketDetail(mixins.RetrieveModelMixin,
+                    mixins.UpdateModelMixin,
+                    mixins.DestroyModelMixin,
+                    generics.GenericAPIView):
+    
+    queryset = Market.objects.all()
+    serializer_class = MarketSerializer
 
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
-@api_view(['GET', 'DELETE', 'PUT'])
-def market_single_view(request, pk):
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 
-    if request.method == 'GET':
-        market = Market.objects.get(pk=pk)
-        serializer = MarketSerializer(market)
-        return Response(serializer.data)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
     
-    
-    if request.method == 'PUT':
-        market = Market.objects.get(pk=pk)
-        serializer = MarketSerializer(market, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else: 
-            return Response(serializer.errors)
-        
-    
-    if request.method == 'DELETE':
-        market = Market.objects.get(pk=pk)
-        serializer = MarketSerializer(market)
-        market.delete()
-        return Response(serializer.data)
-    
+
 
