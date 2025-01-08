@@ -24,4 +24,9 @@ class MarketDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = MarketSerializer
 
 
+class SellerDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Seller.objects.all()
+    serializer_class = SellerSerializer
+
+
 
