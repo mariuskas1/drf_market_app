@@ -23,25 +23,20 @@ class MarketsView(mixins.ListModelMixin,
         return self.create(request, *args, **kwargs)
 
 
-
-
-
-@api_view(['GET', 'POST'])
-def markets_view(request):
-
-    if request.method == 'GET':
-        markets = Market.objects.all()
-        serializer = MarketSerializer(markets, many=True, context={'request': request})
-        return Response(serializer.data)
+class SellersView(mixins.ListModelMixin,
+                  mixins.CreateModelMixin,
+                  generics.GenericAPIView):
     
+    queryset = Seller.objects.all()
+    serializer_class = SellerSerializer
 
-    if request.method == 'POST':
-        serializer = MarketSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else: 
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
 
 
 
@@ -71,20 +66,3 @@ def market_single_view(request, pk):
         return Response(serializer.data)
     
 
-
-@api_view(['GET', 'POST'])
-def sellers_view(request):
-
-    if request.method == 'GET':
-        sellers = Seller.objects.all()
-        serializer = SellerSerializer(sellers, many=True)
-        return Response(serializer.data)
-    
-
-    if request.method == 'POST':
-        serializer = SellerSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else: 
-            return Response(serializer.errors)
