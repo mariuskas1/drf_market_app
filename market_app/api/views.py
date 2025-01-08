@@ -29,4 +29,12 @@ class SellerDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SellerSerializer
 
 
+class SellerOfMarketList(generics.ListAPIView):
+    serializer_class = SellerSerializer
+
+    def get_queryset(self):
+        pk = self.kwargs.get('pk')
+        market = Market.objects.get(pk = pk)
+        return market.sellers.all()
+    
 
