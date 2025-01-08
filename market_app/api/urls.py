@@ -1,11 +1,13 @@
-from django.urls import path
-from .views import MarketsView, SellersView, MarketDetail, SellerDetail, SellerOfMarketList
+from django.urls import path, include
+from .views import SellerOfMarketList, ProductViewSet, MarketsViewSet, SellersViewSet
+from rest_framework import routers
+
+router = routers.SimpleRouter()
+router.register(r'product', ProductViewSet)
+router.register(r'markets', MarketsViewSet)  
+router.register(r'sellers', SellersViewSet)
 
 urlpatterns = [
-    path('markets/', MarketsView.as_view()),
-    path('market/<int:pk>/', MarketDetail.as_view()),
-    path('market/<int:pk>/sellers/', SellerOfMarketList.as_view()),
-    path('sellers/', SellersView.as_view()),
-    path('seller/<int:pk>/', SellerDetail.as_view()),
-
+    path('', include(router.urls)),
+    path('market/<int:pk>/sellers/', SellerOfMarketList.as_view())
 ]

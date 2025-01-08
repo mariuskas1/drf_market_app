@@ -1,32 +1,21 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status 
-from .serializers import MarketSerializer, SellerSerializer
-from market_app.models import Market, Seller
-from rest_framework.views import APIView
-from rest_framework import mixins
-from rest_framework import generics
+from .serializers import MarketSerializer, SellerSerializer, ProductSerializer
+from market_app.models import Market, Seller, Product
+from rest_framework import generics, viewsets
 
 
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
 
-class MarketsView(generics.ListCreateAPIView):
+class MarketsViewSet(viewsets.ModelViewSet):
     queryset = Market.objects.all()
     serializer_class = MarketSerializer
 
-
-class SellersView(generics.ListCreateAPIView):
+class SellersViewSet(viewsets.ModelViewSet):
     queryset = Seller.objects.all()
     serializer_class = SellerSerializer
 
 
-class MarketDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Market.objects.all()
-    serializer_class = MarketSerializer
-
-
-class SellerDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Seller.objects.all()
-    serializer_class = SellerSerializer
 
 
 class SellerOfMarketList(generics.ListAPIView):
@@ -42,5 +31,5 @@ class SellerOfMarketList(generics.ListAPIView):
         market = Market.objects.get(pk = pk)
         serializer.save(markets=[market])
 
-    
+
 
